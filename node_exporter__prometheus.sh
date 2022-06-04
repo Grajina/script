@@ -7,7 +7,7 @@ git init;  git remote add origin https://github.com/Grajina/monitoring_config.gi
 
 #в какой директории это делаем? создать спец папку
 
-Предварительно должно быть скачано:
+#Предварительно должно быть скачано:
 curl -LO https://github.com/prometheus/prometheus/releases/download/v2.34.0/prometheus-2.34.0.linux-amd64.tar.gz
 curl -LO https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
 
