@@ -11,3 +11,5 @@ if [ $? == 0 ]
 then
  echo -e "\n- Mysql OK-"; systemctl restart httpd
 fi
+
+mysql_secure_installation
