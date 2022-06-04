@@ -133,4 +133,39 @@ systemctl restart mariadb.service
 
 
 5. ELK
+---
+sudo yum -y install java-openjdk-devel java-openjdk
+
+sudo rpm --import key
+
+rpm -ivh elasticsearch_7.17.3_x86_64-224190-ec3fa5.rpm
+rpm -ivh kibana_7.17.3_x86_64-224190-3badd3.rpm
+rpm -ivh logstash_7.17.3_x86_64-224190-392536.rpm
+rpm -ivh filebeat_7.17.3_x86_64-224190-59ccad.rpm
+
+#лимиты памяти для виртуальной машины Java
+cat > /etc/elasticsearch/jvm.options.d/jvm.options
+
+-Xms1g
+-Xmx1g
+---
+
+
+Запускаем скрипт ELK.sh
+
+Проверяем, что nginx запущен работает.
+
+#Проверить, что что-то выведет (json)
+>curl localhost:9200
+
+Заходим в браузер ip:5601
+
+Вкладка Management -Stack Management
+Data - Index Management
+Добавить индекс Weblogs*
+
+
+#также можно поднять packetbeat и metricbeat
+
+
 
