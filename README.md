@@ -35,14 +35,14 @@ curl localhost:9100/metrics
 
 зайти в графану - ip:3000
 
-log/pass  -  admin/admin
+>log/pass  -  admin/admin
 
 Панель пока пустая -  добавляем промифиус
 
 Подключаем источник данных - Prometheus
 Колёсико - Data sources - Add data source
 Прописываем:
-http://localhost:9090
+>http://localhost:9090
 <Save&Test>
 
 Далее.
@@ -55,10 +55,82 @@ http://localhost:9090
 Вставить номер 1860 (Node Exporter Full) 
 По нему графана подтянет конфигурацию Load...
 
-Нажимаем <Import>
+Нажимаем Import
 
 Открывается страничка с графиками, которые можно настраивать под себя. (цвет, параметры, ..)
 
-4. База данных. MariaDB
+4. Настройка MariaDB
+
+Запуск скрипта mysql.sh
+
+А) Настройки Мастера
+cat >  /etc/my.cnf.d/server.cnf
+
+[mysqld]
+server_id=1
+log-basename=master
+log-bin
+binlog-format=MIXED
+
+(Без log-bin на команду SHOW MASTER STATUS; выводило Empty set)
+
+systemctl restart mariadb.service
+
+заходим в MariaDB и создаем пользователя для реплики:
+> mysql -u root -p'testpass1'
+> CREATE USER repl@'%' IDENTIFIED BY 'oTUSlave#2020';
+
+Проверяем, что пользователь создался:
+> SELECT User, Host FROM mysql.user;
+
+Выдаем права на репликацию:
+> GRANT REPLICATION SLAVE ON *.* TO repl@'%';
+
+
+>SHOW MASTER STATUS;
+
+-
+Накатываем дамп:
+(должен быть скачан скриптом mysql.sh)
+
+>mysql -u root -p'testpass1' < dump.sql
+
+-
+
+
+>SHOW MASTER STATUS;
+
+
+
+
+Б) На Slave переназначаем Мастера. 
+
+> stop slave;
+
+значения из верхней команды
+> CHANGE MASTER TO MASTER_HOST='192.168.0.22', MASTER_USER='repl', MASTER_PASSWORD='oTUSlave#2020', MASTER_LOG_FILE='mariadb-bin.000002', MASTER_LOG_POS=245;
+
+> start slave;
+
+
+Проверяем 
+>show slave status\G
+
+
+
+В) поменяем что-то  на мастере, чтобы посмотреть, что это изменилось на Slave
+
+либо drop 
+либо 
+>create database BD_kotik;
+>show databases;
+>create table BD_kotik.TBL_meow (id int);
+>insert into BD_kotik.TBL_meow values (25),(12),(96);
+
+посмотрим на Slave , что все изменения подтянулись
+>show databases;
+>select * from BD_kotik.TBL_meow;
+
+
 5. ELK
 
