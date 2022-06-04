@@ -12,4 +12,9 @@ then
  echo -e "\n- Mysql OK-"; systemctl restart httpd
 fi
 
+mkdir /home/anika/dumps; cd /home/anika/dumps
+git init; git pull https://github.com/Grajina/dump.git
+
+echo "Дамп со Slave  в home/anika/dumps "
+
 mysql_secure_installation
