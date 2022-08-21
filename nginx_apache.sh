@@ -62,8 +62,7 @@ fi
 echo -e "\n$(ps afx|grep httpd)"; echo -e "\n$(ss -ntulp|grep 8080)"
 #systemctl status httpd
 
-
-cd /var/www/
+cd /var/www/; tar cf /home/anika/backup/html.tar *; rm -rf *;
 git init;  git remote add origin https://github.com/Grajina/html_for_apache.git; git pull origin main                                                               
 
 echo "git html- ok"
